@@ -17,16 +17,19 @@ export default function CreateEventButton() {
   return (
     <>
       <Button
-        onPress={onOpen}
-        type="button"
-        size="sm"
-        className="fixed bottom-10 right-10 z-50 group flex items-center h-16 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300"
-      >
-        <span className="text-xl font-bold">+</span>
-        <span className="text-large max-w-0 overflow-hidden opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-          Create New Event
-        </span>
-      </Button>
+  onPress={onOpen}
+  type="button"
+  size="sm"
+  className="fixed bottom-10 right-10 z-50 group flex items-center justify-center w-14 hover:w-52 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 overflow-hidden px-4"
+>
+  <span className="text-lg align-middle font-bold transform transition-transform duration-300 group-hover:rotate-90">
+    +
+  </span>
+  <span className="hidden text-base font-medium ml-2 max-w-0 overflow-hidden opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 group-hover:block transition-all duration-300 whitespace-nowrap">
+    Create New Event
+  </span>
+</Button>
+
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable>
         <ModalContent className="h-[80vh] overflow-y-auto">
