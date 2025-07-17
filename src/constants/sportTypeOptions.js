@@ -1,0 +1,15 @@
+export const sportTypeOptions = [
+  { key: "Futsal", label: "Futsal" },
+  { key: "Soccer", label: "Soccer" },
+  { key: "Basketball", label: "Basketball" },
+  { key: "Volleyball", label: "Volleyball" },
+  { key: "Badminton", label: "Badminton" },
+  { key: "Tennis", label: "Tennis" },
+  { key: "Padel", label: "Padel" },
+  { key: "Running", label: "Running" },
+  { key: "Cycling", label: "Cycling" },
+  { key: "Swimming", label: "Swimming" },
+  { key: "Yoga", label: "Yoga" },
+  { key: "Pilates", label: "Pilates" },
+  { key: "Other", label: "Other" },
+];
