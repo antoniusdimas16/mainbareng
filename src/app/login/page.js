@@ -1,6 +1,7 @@
 import LoginForm from "@/components/LoginForm";
 import { Card } from "@heroui/react";
 import SocialLogin from "../auth/page";
+import Navbar from "@/components/Navbar";
 
 export default function LoginPage() {
   return (
