@@ -25,6 +25,7 @@ export default function SportTypeFilter({ selected }) {
     <div>
       <Select
         placeholder="Filter by sport type"
+        aria-label="Filter by sport type"
         defaultSelectedKey={selected || undefined}
         onSelectionChange={handleChange}
         isClearable
