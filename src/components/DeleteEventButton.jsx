@@ -1,24 +1,56 @@
 "use client";
 
+import { useState } from "react";
+import { useActionState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { deleteEvent } from "@/actions/deleteEvent";
+import { showSuccessToast, showErrorToast } from "@/utils/showToast";
+import ConfirmDeletionDialog from "@/components/ConfirmDeletionDialog";
 
 export default function DeleteEventButton({ eventId }) {
-  async function handleDelete(formData) {
-    const confirmed = window.confirm(
-      "This action will permanently delete the event. Are you sure you want to continue? "
-    );
-    if (!confirmed) return;
+  const router = useRouter();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const initialState = { success: false, error: null };
 
-    return await deleteEvent(formData);
+  async function handleDelete(_, formData) {
+    try {
+      await deleteEvent(formData);
+      showSuccessToast("Event deleted successfully");
+      router.push("/event");
+      return { success: true, error: null };
+    } catch (err) {
+      const error = err.message || "Failed to delete event.";
+      showErrorToast(error);
+      return { success: false, error };
+    }
   }
 
+  const [_, formAction] = useActionState(handleDelete, initialState);
+
   return (
-    <form action={handleDelete}>
-      <input type="hidden" name="eventId" value={eventId} />
-      <Button size="sm" variant="light" color="danger" type="submit">
-        Delete
-      </Button>
-    </form>
+    <>
+      <form id={`delete-event-form-${eventId}`} action={formAction}>
+        <input type="hidden" name="eventId" value={eventId} />
+        <Button
+          size="sm"
+          variant="light"
+          color="danger"
+          type="button"
+          onPress={() => setShowConfirm(true)}
+        >
+          Delete
+        </Button>
+      </form>
+
+      <ConfirmDeletionDialog
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={() => {
+          const form = document.getElementById(`delete-event-form-${eventId}`);
+          if (form) form.requestSubmit();
+        }}
+      />
+    </>
   );
 }

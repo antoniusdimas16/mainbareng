@@ -19,6 +19,8 @@ import {
   toCalendarDate,
   Time,
 } from "@internationalized/date";
+import { showSuccessToast, showErrorToast } from "@/utils/showToast";
+import { sportTypeOptions } from "@/constants/sportTypeOptions";
 
 export default function UpdateEventForm({ event }) {
   const router = useRouter();
@@ -27,23 +29,20 @@ export default function UpdateEventForm({ event }) {
   async function handleSubmit(_, formData) {
     try {
       await updateEvent(formData);
+      showSuccessToast("Event updated successfully.");
       router.push(`/event/${event.id}`);
       return { success: true, error: null };
     } catch (err) {
-      return { success: false, error: err.message };
+      const error = err.message || "Failed to update event.";
+      showErrorToast(error);
+      return { success: false, error };
     }
   }
 
-  const [state, formAction] = useActionState(handleSubmit, initialState);
-
-  const sportType = [
-    { key: "Futsal", label: "Futsal" },
-    { key: "Basketball", label: "Basketball" },
-    { key: "Badminton", label: "Badminton" },
-    { key: "Yoga", label: "Yoga" },
-    { key: "Tennis", label: "Tennis" },
-    { key: "Other", label: "Other" },
-  ];
+  const [state, formAction, pending] = useActionState(
+    handleSubmit,
+    initialState
+  );
 
   const utcString = new Date(event.date_time).toISOString();
   const zoned = parseAbsoluteToLocal(utcString);
@@ -71,7 +70,7 @@ export default function UpdateEventForm({ event }) {
         isRequired
         errorMessage="Sport type is required"
       >
-        {sportType.map((sport) => (
+        {sportTypeOptions.map((sport) => (
           <SelectItem key={sport.key}>{sport.label}</SelectItem>
         ))}
       </Select>
@@ -135,7 +134,7 @@ export default function UpdateEventForm({ event }) {
             Cancel
           </Button>
         </Link>
-        <Button type="submit" color="primary">
+        <Button type="submit" color="primary" isLoading={pending}>
           Save
         </Button>
       </div>

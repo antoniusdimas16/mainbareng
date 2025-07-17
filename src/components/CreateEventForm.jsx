@@ -25,7 +25,9 @@ export default function CreateEventForm({ onSuccess, onPending }) {
       if (onSuccess) onSuccess();
       return { success: true, error: null };
     } catch (err) {
-      showErrorToast(err.message || "Failed. Please Try Again.");
+      showErrorToast(
+        err.message || "Failed to create event. Please Try Again."
+      );
       return { success: false, error: err.message };
     }
   }

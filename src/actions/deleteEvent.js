@@ -2,11 +2,27 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 
 export async function deleteEvent(formData) {
-  const eventId = formData.get("eventId");
-  await prisma.events.delete({ where: { id: parseInt(eventId) } });
+  const eventId = parseInt(formData.get("eventId"), 10);
 
-  redirect("/event");
+  if (isNaN(eventId)) {
+    throw new Error("Invalid event ID.");
+  }
+
+  try {
+    await prisma.$transaction([
+      prisma.eventBanners.deleteMany({
+        where: { event_id: eventId },
+      }),
+      prisma.participants.deleteMany({
+        where: { event_id: eventId },
+      }),
+      prisma.events.delete({
+        where: { id: eventId },
+      }),
+    ]);
+  } catch (err) {
+    throw new Error("Failed to delete event and related data.");
+  }
 }

@@ -16,9 +16,21 @@ export async function updateEvent(formData) {
   const sport_type = formData.get("sport_type");
   const is_private = formData.get("is_private");
 
+  if (!title || !sport_type || !city) {
+    throw new Error("Email, Sport Type, and City are required");
+  }
+
   const date_time = new Date(`${date} ${time}`);
   if (isNaN(date_time.getTime())) {
     throw new Error("Invalid date or time format");
+  }
+
+  if (max_participant && parseInt(max_participant) < 0) {
+    throw new Error("Max participant can not be less than 0.");
+  }
+
+  if (price && parseInt(price) < 0) {
+    throw new Error("Price can not be less than 0");
   }
 
   await prisma.events.update({

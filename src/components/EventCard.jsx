@@ -17,7 +17,9 @@ export default function EventCard({ event }) {
     year: "numeric",
   });
 
-  const participantCount = event.participants?.length ?? 0;
+  const joinedParticipants =
+    event.participants?.filter((p) => p.status === "joined") ?? [];
+  const participantCount = joinedParticipants.length ?? 0;
   const max = event.max_participant;
   const hasMax = max > 0;
   const percent = hasMax
@@ -28,9 +30,9 @@ export default function EventCard({ event }) {
 
   const barColor = !hasMax
     ? "bg-green-500"
-    : percent >= 100
+    : percent >= 90
     ? "bg-red-500"
-    : percent >= 75
+    : percent >= 60
     ? "bg-yellow-400"
     : "bg-green-500";
 

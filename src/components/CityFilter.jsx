@@ -24,6 +24,7 @@ export default function CityFilter({ selected, options }) {
     <div>
       <Select
         placeholder="Filter by city"
+        aria-label="Filter by city"
         defaultSelectedKey={selected || undefined}
         onSelectionChange={handleChange}
         isClearable
