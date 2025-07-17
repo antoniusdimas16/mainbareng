@@ -22,25 +22,22 @@ export async function createEvent(formData) {
   const is_private = formData.get("is_private");
   const image = formData.get("image");
 
+  if (!title || !sport_type || !city) {
+    throw new Error("Email, Sport Type, and City are required");
+  }
+
   const date_time = new Date(`${date} ${time}`);
   if (isNaN(date_time.getTime())) {
     throw new Error("Invalid date or time format");
   }
 
-  const event = await prisma.events.create({
-    data: {
-      title,
-      description,
-      sport_type,
-      date_time,
-      max_participant: max_participant ? parseInt(max_participant) : null,
-      location_name,
-      city,
-      price: price ? parseInt(price) : null,
-      is_private: is_private === "true" || is_private === "on",
-      user_id: user.id,
-    },
-  });
+  if (max_participant && parseInt(max_participant) < 0) {
+    throw new Error("Max participant can not be less than 0.");
+  }
+
+  if (price && parseInt(price) < 0) {
+    throw new Error("Price can not be less than 0");
+  }
 
   let bannerPath = null;
   let bannerName = null;
@@ -52,8 +49,21 @@ export async function createEvent(formData) {
     image.size > 0 &&
     image.name
   ) {
+    const allowedImageTypes = ["image/png", "image/jpeg"];
+    const allowedImageSizes = 10 * 1024 * 1024;
+
+    if (!allowedImageTypes.includes(image.type)) {
+      throw new Error(
+        "File type not supported. Upload only PNG and JPEG files."
+      );
+    }
+
+    if (image.size > allowedImageSizes) {
+      throw new Error("Image too large. Max file size is 10MB.");
+    }
+
     const buffer = Buffer.from(await image.arrayBuffer());
-    const timestamp = event.created_at.toISOString().replace(/[:.]/g, "-");
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const extension = image.name.split(".").pop();
     const key = `event-${timestamp}.${extension}`;
 
@@ -71,9 +81,24 @@ export async function createEvent(formData) {
       bannerName = key;
       bannerSize = image.size;
     } catch (err) {
-      console.error("Image upload failed:", err);
+      throw new Error(`Image upload failed: (${err.message})`);
     }
   }
+
+  const event = await prisma.events.create({
+    data: {
+      title,
+      description,
+      sport_type,
+      date_time,
+      max_participant: max_participant ? parseInt(max_participant) : null,
+      location_name,
+      city,
+      price: price ? parseInt(price) : null,
+      is_private: is_private === "true" || is_private === "on",
+      user_id: user.id,
+    },
+  });
 
   if (bannerPath) {
     await prisma.eventBanners.create({
