@@ -37,7 +37,15 @@ export default async function EventPage({ searchParams }) {
     orderBy: { date_time: "asc" },
   });
 
-  const total = await prisma.events.count();
+  const total = await prisma.events.count({
+    where: filterBy,
+  });
+
+  const query = {};
+
+  if (sportType) query.sport_type = sportType;
+  if (city) query.city = city;
+  if (mine) query.mine = "true";
 
   return (
     <section className="max-w-5xl mx-auto p-6 space-y-6 mt-14">
@@ -63,7 +71,12 @@ export default async function EventPage({ searchParams }) {
               <EventCard key={event.id} event={event} />
             ))}
           </div>
-          <Pagination currentPage={page} total={total} limit={limit} />
+          <Pagination
+            currentPage={page}
+            total={total}
+            limit={limit}
+            query={query}
+          />
         </div>
       )}
       <CreateEventButton />
