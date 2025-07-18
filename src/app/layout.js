@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <HeroUIProvider>
-          <Navbar />
+          {/* <Navbar /> */}
           <ToastProvider placement={"top-center"} toastOffset={50} />
           {children}
         </HeroUIProvider>
