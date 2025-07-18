@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/actions/registerUser";
 import { Input, Button } from "@heroui/react";
+import { showSuccessToast, showErrorToast } from "@/utils/showToast";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -12,14 +13,21 @@ export default function RegisterForm() {
   async function handleRegister(_, formData) {
     try {
       await registerUser(formData);
+
+      showSuccessToast("Account created successfully!");
       router.push("/login");
+
       return { success: true, error: null };
     } catch (err) {
+      showErrorToast(err.message || "Failed. Please try again.");
       return { success: false, error: err.message };
     }
   }
 
-  const [state, formAction] = useActionState(handleRegister, initialState);
+  const [state, formAction, pending] = useActionState(
+    handleRegister,
+    initialState
+  );
 
   return (
     <form action={formAction} className="space-y-4">
@@ -31,7 +39,7 @@ export default function RegisterForm() {
         </p>
       </div>
 
-      <div className="space-y-4">
+      <fieldset disabled={pending} className="space-y-4">
         <Input
           isRequired
           label="Email"
@@ -44,7 +52,6 @@ export default function RegisterForm() {
             input: "text-gray-900",
           }}
         />
-
         <Input
           isRequired
           label="Password"
@@ -57,7 +64,6 @@ export default function RegisterForm() {
             input: "text-gray-900",
           }}
         />
-
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="First Name"
@@ -70,7 +76,6 @@ export default function RegisterForm() {
               input: "text-gray-900",
             }}
           />
-
           <Input
             label="Last Name"
             name="last_name"
@@ -87,6 +92,7 @@ export default function RegisterForm() {
         <Button
           type="submit"
           color="primary"
+          isLoading={pending}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
           size="lg"
         >
@@ -106,7 +112,7 @@ export default function RegisterForm() {
             Login here
           </a>
         </p>
-      </div>
+      </fieldset>
     </form>
   );
 }
