@@ -23,12 +23,12 @@ export default function RegisterPage() {
           <h2 className="text-4xl font-extrabold text-white">MainBareng</h2>
         </div>
 
-        <div className="absolute top-25 right-25 inset-x-5">
-          <div className="bg-gray-100 p-2 rounded-lg shadow-xl max-w-md mx-auto ">
+        <div className="absolute top-36 left-14 max-w-md">
+          <div className="bg-gray-100 p-4 rounded-lg shadow-xl">
             <p className="text-black text-lg mb-2">
               &quot;Tempat paling pas untuk cari temen MainBareng!&quot;
             </p>
-            <p className="text-sm text-gray-600 po">- David G </p>
+            <p className="text-sm text-gray-600">- David G</p>
           </div>
         </div>
       </div>
