@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { getActiveUser } from "@/utils/getActiveUser";
 import { redirect } from "next/navigation";
 
@@ -8,5 +9,10 @@ export default async function EventLayout({ children }) {
     redirect("/");
   }
 
-  return <section>{children}</section>;
+  return (
+    <section>
+      <Navbar />
+      {children}
+    </section>
+  );
 }
