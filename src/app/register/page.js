@@ -18,17 +18,18 @@ export default function RegisterPage() {
           fill
           className="object-cover"
         />
+        <div className="absolute inset-0 bg-black opacity-50"></div>
 
-        <div className="absolute top-14 left-14">
+        <div className="absolute top-14 right-14">
           <h2 className="text-4xl font-extrabold text-white">MainBareng</h2>
         </div>
 
-        <div className="absolute top-36 left-14 max-w-md">
-          <div className="bg-gray-100 p-4 rounded-lg shadow-xl">
-            <p className="text-black text-lg mb-2">
+        <div className="absolute top-30 left-14 max-w-md">
+          <div className="backdrop-blur-2xl p-4 rounded-lg ">
+            <p className="text-gray-100 text-lg mb-2">
               &quot;Tempat paling pas untuk cari temen MainBareng!&quot;
             </p>
-            <p className="text-sm text-gray-600">- David G</p>
+            <p className="text-sm text-gray-200">- David G</p>
           </div>
         </div>
       </div>
