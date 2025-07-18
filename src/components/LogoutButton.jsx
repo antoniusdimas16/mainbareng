@@ -19,7 +19,12 @@ export default function LogoutButton() {
 
   return (
     <form action={formAction}>
-      <Button type="submit" size="sm" color="danger">
+      <Button
+        type="submit"
+        size="sm"
+        color="danger"
+        className="text-sm font-medium px-4 py-1 rounded-full shadow-none"
+      >
         Log out
       </Button>
     </form>
