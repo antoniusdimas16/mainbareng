@@ -16,6 +16,7 @@ export async function updateEvent(formData) {
   const price = parseInt(formData.get("price")) || null;
   const sport_type = formData.get("sport_type");
   const is_private = formData.get("is_private");
+  const timeZone = formData.get("timezone");
 
   if (!title || !sport_type || !city) {
     throw new Error("Email, Sport Type, and City are required");
@@ -35,7 +36,6 @@ export async function updateEvent(formData) {
   }
 
   const shortTime = time.slice(0, 5);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const dateString = `${date}T${shortTime}[${timeZone}]`;
   const utcDateTime = parseZonedDateTime(dateString);
 
