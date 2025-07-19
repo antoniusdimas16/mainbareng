@@ -16,6 +16,7 @@ import { sportTypeOptions } from "@/constants/sportTypeOptions";
 import { showSuccessToast, showErrorToast } from "@/utils/showToast";
 
 export default function CreateEventForm({ onSuccess, onPending }) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const initialState = { success: false, error: null };
 
   async function handleSubmit(_, formData) {
@@ -117,6 +118,7 @@ export default function CreateEventForm({ onSuccess, onPending }) {
         <Checkbox name="is_private" value="true">
           Private Event
         </Checkbox>
+        <input type="hidden" name="timezone" value={timeZone} />
 
         {state.error && (
           <p className="text-sm text-red-600 text-center">{state.error}</p>
