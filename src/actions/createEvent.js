@@ -45,77 +45,81 @@ export async function createEvent(formData) {
   const dateString = `${date}T${shortTime}[${timeZone}]`;
   const utcDateTime = parseZonedDateTime(dateString);
 
-  let bannerPath = null;
-  let bannerName = null;
-  let bannerSize = null;
+  console.log(timeZone);
+  console.log(dateString);
+  console.log(utcDateTime);
 
-  if (
-    image &&
-    typeof image.arrayBuffer === "function" &&
-    image.size > 0 &&
-    image.name
-  ) {
-    const allowedImageTypes = ["image/png", "image/jpeg"];
-    const allowedImageSizes = 10 * 1024 * 1024;
+  // let bannerPath = null;
+  // let bannerName = null;
+  // let bannerSize = null;
 
-    if (!allowedImageTypes.includes(image.type)) {
-      throw new Error(
-        "File type not supported. Upload only PNG and JPEG files."
-      );
-    }
+  // if (
+  //   image &&
+  //   typeof image.arrayBuffer === "function" &&
+  //   image.size > 0 &&
+  //   image.name
+  // ) {
+  //   const allowedImageTypes = ["image/png", "image/jpeg"];
+  //   const allowedImageSizes = 10 * 1024 * 1024;
 
-    if (image.size > allowedImageSizes) {
-      throw new Error("Image too large. Max file size is 10MB.");
-    }
+  //   if (!allowedImageTypes.includes(image.type)) {
+  //     throw new Error(
+  //       "File type not supported. Upload only PNG and JPEG files."
+  //     );
+  //   }
 
-    const buffer = Buffer.from(await image.arrayBuffer());
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const extension = image.name.split(".").pop();
-    const key = `event-${timestamp}.${extension}`;
+  //   if (image.size > allowedImageSizes) {
+  //     throw new Error("Image too large. Max file size is 10MB.");
+  //   }
 
-    try {
-      await s3client.send(
-        new PutObjectCommand({
-          Bucket: "mainbareng",
-          Key: key,
-          Body: buffer,
-          ContentType: image.type,
-        })
-      );
+  //   const buffer = Buffer.from(await image.arrayBuffer());
+  //   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  //   const extension = image.name.split(".").pop();
+  //   const key = `event-${timestamp}.${extension}`;
 
-      bannerPath = `https://pub-030c44170f76454a961c419019a7b038.r2.dev/mainbareng/${key}`;
-      bannerName = key;
-      bannerSize = image.size;
-    } catch (err) {
-      throw new Error(`Image upload failed: (${err.message})`);
-    }
-  }
+  //   try {
+  //     await s3client.send(
+  //       new PutObjectCommand({
+  //         Bucket: "mainbareng",
+  //         Key: key,
+  //         Body: buffer,
+  //         ContentType: image.type,
+  //       })
+  //     );
 
-  const event = await prisma.events.create({
-    data: {
-      title,
-      description,
-      sport_type,
-      date_time: utcDateTime.toAbsoluteString(),
-      max_participant: max_participant ? parseInt(max_participant) : null,
-      location_name,
-      city,
-      price: price ? parseInt(price) : null,
-      is_private: is_private === "true" || is_private === "on",
-      user_id: user.id,
-    },
-  });
+  //     bannerPath = `https://pub-030c44170f76454a961c419019a7b038.r2.dev/mainbareng/${key}`;
+  //     bannerName = key;
+  //     bannerSize = image.size;
+  //   } catch (err) {
+  //     throw new Error(`Image upload failed: (${err.message})`);
+  //   }
+  // }
 
-  if (bannerPath) {
-    await prisma.eventBanners.create({
-      data: {
-        event_id: event.id,
-        name: bannerName,
-        size: bannerSize,
-        path: bannerPath,
-      },
-    });
-  }
+  // const event = await prisma.events.create({
+  //   data: {
+  //     title,
+  //     description,
+  //     sport_type,
+  //     date_time: utcDateTime.toAbsoluteString(),
+  //     max_participant: max_participant ? parseInt(max_participant) : null,
+  //     location_name,
+  //     city,
+  //     price: price ? parseInt(price) : null,
+  //     is_private: is_private === "true" || is_private === "on",
+  //     user_id: user.id,
+  //   },
+  // });
 
-  revalidatePath("/event");
+  // if (bannerPath) {
+  //   await prisma.eventBanners.create({
+  //     data: {
+  //       event_id: event.id,
+  //       name: bannerName,
+  //       size: bannerSize,
+  //       path: bannerPath,
+  //     },
+  //   });
+  // }
+
+  // revalidatePath("/event");
 }
