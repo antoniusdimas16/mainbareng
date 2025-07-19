@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { parseZonedDateTime } from "@internationalized/date";
 
 export async function updateEvent(formData) {
   const eventId = formData.get("eventId");
@@ -33,12 +34,17 @@ export async function updateEvent(formData) {
     throw new Error("Price can not be less than 0");
   }
 
+  const shortTime = time.slice(0, 5);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const dateString = `${date}T${shortTime}[${timeZone}]`;
+  const utcDateTime = parseZonedDateTime(dateString);
+
   await prisma.events.update({
     where: { id: parseInt(eventId) },
     data: {
       title,
       description,
-      date_time,
+      date_time: utcDateTime.toAbsoluteString(),
       location_name,
       city,
       max_participant,

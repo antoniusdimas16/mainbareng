@@ -5,6 +5,7 @@ import { getActiveUser } from "@/utils/getActiveUser";
 import { revalidatePath } from "next/cache";
 import { s3client } from "@/lib/s3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { parseZonedDateTime } from "@internationalized/date";
 
 export async function createEvent(formData) {
   const user = await getActiveUser();
@@ -38,6 +39,11 @@ export async function createEvent(formData) {
   if (price && parseInt(price) < 0) {
     throw new Error("Price can not be less than 0");
   }
+
+  const shortTime = time.slice(0, 5);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const dateString = `${date}T${shortTime}[${timeZone}]`;
+  const utcDateTime = parseZonedDateTime(dateString);
 
   let bannerPath = null;
   let bannerName = null;
@@ -90,7 +96,7 @@ export async function createEvent(formData) {
       title,
       description,
       sport_type,
-      date_time,
+      date_time: utcDateTime.toAbsoluteString(),
       max_participant: max_participant ? parseInt(max_participant) : null,
       location_name,
       city,
