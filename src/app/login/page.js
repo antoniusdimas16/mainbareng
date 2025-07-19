@@ -1,6 +1,7 @@
 import { Card, CardBody } from "@heroui/react";
 import LoginForm from "@/components/LoginForm";
 import Image from "next/image";
+import SocialLogin from "../auth/page";
 
 export default function LoginPage() {
   return (
@@ -9,6 +10,7 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-white">
         <div className="w-full max-w-md">
           <LoginForm />
+          <SocialLogin />
         </div>
       </div>
 
