@@ -23,6 +23,7 @@ import { showSuccessToast, showErrorToast } from "@/utils/showToast";
 import { sportTypeOptions } from "@/constants/sportTypeOptions";
 
 export default function UpdateEventForm({ event }) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const router = useRouter();
   const initialState = { success: false, error: null };
 
@@ -127,6 +128,7 @@ export default function UpdateEventForm({ event }) {
       </div>
 
       <input type="hidden" name="eventId" value={event.id} />
+      <input type="hidden" name="timezone" value={timeZone} />
 
       <div className="flex justify-end space-x-3">
         <Link href={`/event/${event.id}`}>
