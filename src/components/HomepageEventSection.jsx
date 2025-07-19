@@ -35,7 +35,7 @@ export default async function FeaturedEventSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className=" grid grid-cols-1 sm:grid-cols-2 gap-6 m-auto">
           {events.map((event) => (
             <HomepageEventCard key={event.id} event={event} />
           ))}

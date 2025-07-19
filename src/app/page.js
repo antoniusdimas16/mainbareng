@@ -17,13 +17,19 @@ export default function HomePage() {
         />
         <Navbar />
 
-        <div className="absolute inset-0 flex flex-col items-end justify-end bg-rose-300/10 text-white px-12 pb-24 text-right">
-          <p className="text-2xl mb-2 max-w-md">
+        <div className="absolute inset-0 flex flex-col items-center md:items-end justify-end bg-rose-300/10 text-white px-4 md:px-12 pb-20 md:pb-24 text-center md:text-right">
+          <p className="text-xl md:text-2xl mb-2 max-w-xs md:max-w-md">
             Dari Aplikasi ke Lapangan, Yuk
           </p>
-          <h1 className="text-7xl font-bold mb-6 ">MainBareng!</h1>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">MainBareng!</h1>
           <Link href="/register">
-            <Button color="primary">Join Now</Button>
+            <Button
+              size="md"
+              color="primary"
+              className="w-full max-w-[200px] md:w-auto"
+            >
+              Join Now
+            </Button>
           </Link>
         </div>
       </section>

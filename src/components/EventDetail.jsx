@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardBody, CardHeader, Button } from "@heroui/react";
+import { Card, CardBody, CardHeader, Button, Tooltip } from "@heroui/react";
 import DeleteEventButton from "@/components/DeleteEventButton";
 import JoinEventButton from "@/components/JoinEventButton";
+import ParticipantListModal from "./ParticipantListModal";
 
 export default function EventDetail({ event, user, hasJoined }) {
   const creator = `${event.user.first_name} ${event.user.last_name}`;
@@ -23,8 +24,12 @@ export default function EventDetail({ event, user, hasJoined }) {
   const mapQuery = encodeURIComponent(`${locationName}, ${cityName}`);
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
-  const joinedParticipants =
-    event.participants?.filter((p) => p.status === "joined") ?? [];
+  const joinedParticipants = event.participants.map((p) => ({
+    email: p.user.email,
+    first_name: p.user.first_name,
+    last_name: p.user.last_name,
+  }));
+
   const participantCount = joinedParticipants.length ?? 0;
   const max = event.max_participant;
   const hasMax = max > 0;
@@ -97,14 +102,16 @@ export default function EventDetail({ event, user, hasJoined }) {
             <span className="font-semibold">Lokasi:</span>
             <div className="flex items-center gap-1">
               {`${locationName}, ${cityName}`}
-              <Link
-                href={mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-blue-600 hover:underline"
-              >
-                <p>🗺️</p>
-              </Link>
+              <Tooltip content="Show on Maps">
+                <Link
+                  href={mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-blue-600 hover:underline"
+                >
+                  <p>🗺️</p>
+                </Link>
+              </Tooltip>
             </div>
           </div>
           <div>
@@ -125,6 +132,7 @@ export default function EventDetail({ event, user, hasJoined }) {
               <span className="w-6 text-center">
                 {event.max_participant ?? "∞"}
               </span>
+              <ParticipantListModal participants={joinedParticipants} />
             </div>
           </div>
         </div>
