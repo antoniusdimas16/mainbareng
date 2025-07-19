@@ -22,6 +22,7 @@ export async function createEvent(formData) {
   const price = formData.get("price");
   const is_private = formData.get("is_private");
   const image = formData.get("image");
+  const timeZone = formData.get("timezone");
 
   if (!title || !sport_type || !city) {
     throw new Error("Email, Sport Type, and City are required");
@@ -41,13 +42,13 @@ export async function createEvent(formData) {
   }
 
   const shortTime = time.slice(0, 5);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const dateString = `${date}T${shortTime}[${timeZone}]`;
   const utcDateTime = parseZonedDateTime(dateString);
 
   console.log(timeZone);
   console.log(dateString);
   console.log(utcDateTime);
+  console.log(utcDateTime.toAbsoluteString());
 
   // let bannerPath = null;
   // let bannerName = null;
