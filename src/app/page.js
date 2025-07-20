@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import HomepageEventSection from "@/components/HomepageEventSection";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
   return (
@@ -34,6 +35,7 @@ export default function HomePage() {
         </div>
       </section>
       <HomepageEventSection />
+      <Footer />
     </main>
   );
 }
