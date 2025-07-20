@@ -11,17 +11,16 @@ export default function RegisterForm() {
   const initialState = { success: false, error: null };
 
   async function handleRegister(_, formData) {
-    try {
-      await registerUser(formData);
+    const result = await registerUser(formData);
 
-      showSuccessToast("Account created successfully!");
-      router.push("/login");
-
-      return { success: true, error: null };
-    } catch (err) {
-      showErrorToast(err.message || "Failed. Please try again.");
-      return { success: false, error: err.message };
+    if (!result.success) {
+      showErrorToast(result.error || "Registration failed. Please try again.");
+      return { success: false, error: result.error };
     }
+
+    showSuccessToast("Account created successfully!");
+    router.push("/login");
+    return { success: true, error: null };
   }
 
   const [state, formAction, pending] = useActionState(

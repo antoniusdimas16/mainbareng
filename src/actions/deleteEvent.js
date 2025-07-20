@@ -7,7 +7,10 @@ export async function deleteEvent(formData) {
   const eventId = parseInt(formData.get("eventId"), 10);
 
   if (isNaN(eventId)) {
-    throw new Error("Invalid event ID.");
+    return {
+      success: false,
+      error: "Invalid event ID.",
+    };
   }
 
   try {
@@ -23,6 +26,11 @@ export async function deleteEvent(formData) {
       }),
     ]);
   } catch (err) {
-    throw new Error("Failed to delete event and related data.");
+    return {
+      success: false,
+      error: "Failed to delete event and related data.",
+    };
   }
+
+  return { success: true, error: null };
 }

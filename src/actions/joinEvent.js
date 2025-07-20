@@ -23,7 +23,10 @@ export async function joinEvent(formData) {
   });
 
   if (event.max_participant && joinedCount >= event.max_participant) {
-    throw new Error("Event is full");
+    return {
+      success: false,
+      error: "Event is full",
+    };
   }
 
   const existingParticipant = await prisma.participants.findFirst({
@@ -48,4 +51,6 @@ export async function joinEvent(formData) {
   }
 
   revalidatePath(`/event/${event_id}`);
+
+  return { success: true, error: null };
 }

@@ -12,17 +12,16 @@ export default function LoginForm() {
   const initialState = { success: false, error: null };
 
   async function handleLogin(_, formData) {
-    try {
-      await loginUser(formData);
+    const result = await loginUser(formData);
 
-      showSuccessToast("Login successful! Welcome back!");
-      router.push("/event");
-
-      return { success: true, error: null };
-    } catch (err) {
-      showErrorToast(err.message || "Login failed. Please try again.");
-      return { success: false, error: err.message };
+    if (!result.success) {
+      showErrorToast(result.error || "Login failed. Please try again.");
+      return { success: false, error: result.error };
     }
+
+    showSuccessToast("Login successful! Welcome back!");
+    router.push("/event");
+    return { success: true, error: null };
   }
 
   const [state, formAction, pending] = useActionState(
@@ -81,8 +80,6 @@ export default function LoginForm() {
           <p className="text-sm text-red-600 text-center">{state.error}</p>
         )}
       </fieldset>
-
-     
     </form>
   );
 }
