@@ -10,17 +10,26 @@ export async function loginUser(formData) {
   const password = formData.get("password");
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return {
+      success: false,
+      error: "Email and password are required",
+    };
   }
 
   const user = await prisma.users.findUnique({ where: { email } });
 
   if (!user) {
-    throw new Error("User not found");
+    return {
+      success: false,
+      error: "User not found",
+    };
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
-    throw new Error("Invalid password");
+    return {
+      success: false,
+      error: "Invalid password",
+    };
   }
 
   const payload = {
@@ -38,4 +47,6 @@ export async function loginUser(formData) {
     path: "/",
     maxAge: 60 * 60 * 24,
   });
+
+  return { success: true, error: null };
 }

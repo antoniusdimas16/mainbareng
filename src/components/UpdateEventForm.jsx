@@ -28,16 +28,17 @@ export default function UpdateEventForm({ event }) {
   const initialState = { success: false, error: null };
 
   async function handleSubmit(_, formData) {
-    try {
-      await updateEvent(formData);
-      showSuccessToast("Event updated successfully.");
-      router.push(`/event/${event.id}`);
-      return { success: true, error: null };
-    } catch (err) {
-      const error = err.message || "Failed to update event.";
+    const result = await updateEvent(formData);
+
+    if (!result.success) {
+      const error = result.error || "Failed to update event.";
       showErrorToast(error);
       return { success: false, error };
     }
+
+    showSuccessToast("Event updated successfully.");
+    router.push(`/event/${event.id}`);
+    return { success: true, error: null };
   }
 
   const [state, formAction, pending] = useActionState(

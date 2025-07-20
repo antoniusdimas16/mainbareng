@@ -20,17 +20,18 @@ export default function CreateEventForm({ onSuccess, onPending }) {
   const initialState = { success: false, error: null };
 
   async function handleSubmit(_, formData) {
-    try {
-      await createEvent(formData);
-      showSuccessToast("Event created!");
-      if (onSuccess) onSuccess();
-      return { success: true, error: null };
-    } catch (err) {
+    const result = await createEvent(formData);
+
+    if (!result.success) {
       showErrorToast(
-        err.message || "Failed to create event. Please Try Again."
+        result.error || "Failed to create event. Please Try Again."
       );
-      return { success: false, error: err.message };
+      return { success: false, error: result.error };
     }
+
+    showSuccessToast("Event created!");
+    if (onSuccess) onSuccess();
+    return { success: true, error: null };
   }
 
   const [state, formAction, pending] = useActionState(

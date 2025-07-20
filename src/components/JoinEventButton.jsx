@@ -23,28 +23,30 @@ export default function JoinEventButton({
       return { success: false, error };
     }
 
-    try {
-      await joinEvent(formData);
-      showSuccessToast("See you in the event!");
-      router.refresh();
-      return { success: true, error: null };
-    } catch (err) {
-      const error = err.message || "Event is full or something went wrong.";
+    const result = await joinEvent(formData);
+
+    if (!result.success) {
+      const error = result.error || "Event is full or something went wrong.";
       showErrorToast(error);
       return { success: false, error };
     }
+
+    showSuccessToast("See you in the event!");
+    router.refresh();
+    return { success: true, error: null };
   }
 
   async function handleCancel(_, formData) {
-    try {
-      await cancelJoinEvent(formData);
-      router.refresh();
-      return { success: true, error: null };
-    } catch (err) {
-      const error = "Error while canceling. Please try again.";
+    const result = await cancelJoinEvent(formData);
+
+    if (!result.success) {
+      const error = result.error || "Error while canceling. Please try again.";
       showErrorToast(error);
       return { success: false, error };
     }
+
+    router.refresh();
+    return { success: true, error: null };
   }
 
   const [state, joinAction, joinPending] = useActionState(

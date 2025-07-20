@@ -14,16 +14,17 @@ export default function DeleteEventButton({ eventId }) {
   const initialState = { success: false, error: null };
 
   async function handleDelete(_, formData) {
-    try {
-      await deleteEvent(formData);
-      showSuccessToast("Event deleted successfully");
-      router.push("/event");
-      return { success: true, error: null };
-    } catch (err) {
-      const error = err.message || "Failed to delete event.";
+    const result = await deleteEvent(formData);
+
+    if (!result.success) {
+      const error = result.error || "Failed to delete event.";
       showErrorToast(error);
       return { success: false, error };
     }
+
+    showSuccessToast("Event deleted successfully");
+    router.push("/event");
+    return { success: true, error: null };
   }
 
   const [_, formAction] = useActionState(handleDelete, initialState);

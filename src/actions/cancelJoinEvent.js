@@ -18,4 +18,6 @@ export async function cancelJoinEvent(formData) {
   });
 
   revalidatePath(`/event/${eventId}`);
+
+  return { success: true, error: null };
 }

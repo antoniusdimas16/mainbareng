@@ -10,12 +10,13 @@ export async function registerUser(formData) {
   const last_name = formData.get("last_name");
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return { success: false, error: "Email and password are required" };
   }
 
   const existing = await prisma.users.findUnique({ where: { email } });
+
   if (existing) {
-    throw new Error("User already exist");
+    return { success: false, error: "User already exists" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -28,4 +29,6 @@ export async function registerUser(formData) {
       last_name,
     },
   });
+
+  return { success: true, error: null };
 }

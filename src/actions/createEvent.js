@@ -9,7 +9,9 @@ import { parseZonedDateTime } from "@internationalized/date";
 
 export async function createEvent(formData) {
   const user = await getActiveUser();
-  if (!user) throw new Error("Unauthorized");
+  if (!user) {
+    return { success: false, error: "Unauthorized" };
+  }
 
   const title = formData.get("title");
   const description = formData.get("description");
@@ -25,20 +27,26 @@ export async function createEvent(formData) {
   const timeZone = formData.get("timezone");
 
   if (!title || !sport_type || !city) {
-    throw new Error("Email, Sport Type, and City are required");
+    return {
+      success: false,
+      error: "Email, Sport Type, and City are required",
+    };
   }
 
   const date_time = new Date(`${date} ${time}`);
   if (isNaN(date_time.getTime())) {
-    throw new Error("Invalid date or time format");
+    return { success: false, error: "Invalid date or time format" };
   }
 
   if (max_participant && parseInt(max_participant) < 0) {
-    throw new Error("Max participant can not be less than 0.");
+    return {
+      success: false,
+      error: "Max participant can not be less than 0.",
+    };
   }
 
   if (price && parseInt(price) < 0) {
-    throw new Error("Price can not be less than 0");
+    return { success: false, error: "Price can not be less than 0" };
   }
 
   const shortTime = time.slice(0, 5);
@@ -59,13 +67,17 @@ export async function createEvent(formData) {
     const allowedImageSizes = 10 * 1024 * 1024;
 
     if (!allowedImageTypes.includes(image.type)) {
-      throw new Error(
-        "File type not supported. Upload only PNG and JPEG files."
-      );
+      return {
+        success: false,
+        error: "File type not supported. Upload only PNG and JPEG files.",
+      };
     }
 
     if (image.size > allowedImageSizes) {
-      throw new Error("Image too large. Max file size is 10MB.");
+      return {
+        success: false,
+        error: "Image too large. Max file size is 10MB.",
+      };
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
@@ -87,7 +99,10 @@ export async function createEvent(formData) {
       bannerName = key;
       bannerSize = image.size;
     } catch (err) {
-      throw new Error(`Image upload failed: (${err.message})`);
+      return {
+        success: false,
+        error: `Image upload failed: (${err.message})`,
+      };
     }
   }
 
@@ -118,4 +133,6 @@ export async function createEvent(formData) {
   }
 
   revalidatePath("/event");
+
+  return { success: true, error: null };
 }
