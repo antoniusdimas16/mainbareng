@@ -11,7 +11,18 @@ export default async function EventDetailPage({ params }) {
     include: {
       user: true,
       eventbanner: true,
-      participants: true,
+      participants: {
+        where: { status: "joined" },
+        include: {
+          user: {
+            select: {
+              email: true,
+              first_name: true,
+              last_name: true,
+            },
+          },
+        },
+      },
     },
   });
 
